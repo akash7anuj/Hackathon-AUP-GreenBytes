@@ -1,0 +1,246 @@
+{
+    "1": {
+        "username": "john_doe",
+        "points": 100,
+        "energy_usage": 500,
+        "last_challenge_completed": null,
+        "challenge_history": []
+    },
+    "2": {
+        "username": "akash",
+        "points": 30,
+        "energy_usage": 500,
+        "last_challenge_completed": "Use only energy-efficient appliances today",
+        "challenge_history": [
+            {
+                "name": "Use only energy-efficient appliances today",
+                "points": 30
+            }
+        ]
+    },
+    "3": {
+        "username": "ankit",
+        "points": 80,
+        "energy_usage": 500,
+        "last_challenge_completed": "Reduce energy by 10% this week",
+        "challenge_history": [
+            {
+                "name": "Use only energy-efficient appliances today",
+                "points": 30
+            }
+        ]
+    },
+    "4": {
+        "username": "anuj",
+        "points": 50,
+        "energy_usage": 500,
+        "last_challenge_completed": "Reduce energy by 10% this week",
+        "challenge_history": []
+    },
+    "5": {
+        "username": "anuj",
+        "points": 0,
+        "energy_usage": 500,
+        "last_challenge_completed": null
+    },
+    "6": {
+        "username": "anuj",
+        "points": 0,
+        "energy_usage": 500,
+        "last_challenge_completed": null
+    },
+    "7": {
+        "username": "ankit",
+        "points": 0,
+        "energy_usage": 500,
+        "last_challenge_completed": null
+    },
+    "8": {
+        "username": "ankit",
+        "points": 0,
+        "energy_usage": 500,
+        "last_challenge_completed": null
+    },
+    "anuj": {
+        "username": "anuj",
+        "points": 180,
+        "energy_usage": 500,
+        "last_challenge_completed": null,
+        "completed_challenges": [
+            "Use only energy-efficient appliances today",
+            "Reduce energy usage by 20% this month",
+            "Reduce energy by 10% this week"
+        ],
+        "history": [
+            {
+                "challenge": "Use only energy-efficient appliances today",
+                "points": 30,
+                "completed_at": "2025-04-18T16:03:49.850301"
+            },
+            {
+                "challenge": "Reduce energy usage by 20% this month",
+                "points": 100,
+                "completed_at": "2025-04-18T16:04:39.085729"
+            },
+            {
+                "challenge": "Reduce energy by 10% this week",
+                "points": 50,
+                "completed_at": "2025-04-18T16:05:15.178213"
+            }
+        ]
+    },
+    "ankit": {
+        "username": "ankit",
+        "points": 250,
+        "energy_usage": 500,
+        "last_challenge_completed": "Install a smart thermostat",
+        "completed_challenges": [
+            "Reduce energy by 10% this week",
+            "Reduce energy usage by 20% this month",
+            "Use only energy-efficient appliances today",
+            "Install a smart thermostat"
+        ],
+        "history": [
+            {
+                "challenge": "Reduce energy by 10% this week",
+                "points": 50,
+                "completed_at": "2025-04-18"
+            },
+            {
+                "challenge": "Reduce energy usage by 20% this month",
+                "points": 100,
+                "completed_at": "2025-04-18T16:02:35.625801"
+            },
+            {
+                "challenge": "Use only energy-efficient appliances today",
+                "points": 30,
+                "completed_at": "2025-04-18T16:02:49.479374"
+            },
+            {
+                "challenge": "Install a smart thermostat",
+                "points": 70,
+                "completed_at": "2025-04-18T16:20:05.462305"
+            }
+        ]
+    },
+    "satya": {
+        "username": "satya",
+        "points": 70,
+        "energy_usage": 500,
+        "last_challenge_completed": null,
+        "completed_challenges": [
+            "Install a smart thermostat"
+        ],
+        "history": [
+            {
+                "challenge": "Install a smart thermostat",
+                "points": 70,
+                "completed_at": "2025-04-18T16:06:41.198352"
+            }
+        ]
+    },
+    "anu": {
+        "username": "anu",
+        "points": 50,
+        "energy_usage": 500,
+        "last_challenge_completed": "Reduce energy by 10% this week",
+        "completed_challenges": [
+            "Reduce energy by 10% this week"
+        ],
+        "history": [
+            {
+                "challenge": "Reduce energy by 10% this week",
+                "points": 50,
+                "completed_at": "2025-04-18T16:21:37.602416"
+            }
+        ]
+    },
+    "shubham": {
+        "username": "shubham",
+        "points": 100,
+        "energy_usage": 500,
+        "last_challenge_completed": "Reduce energy usage by 20% this month",
+        "completed_challenges": [
+            "Reduce energy usage by 20% this month"
+        ],
+        "history": [
+            {
+                "challenge": "Reduce energy usage by 20% this month",
+                "points": 100,
+                "completed_at": "2025-04-18T16:21:56.036970"
+            }
+        ]
+    },
+    "sdjk": {
+        "username": "sdjk",
+        "points": 50,
+        "energy_usage": 500,
+        "last_challenge_completed": "Reduce energy by 10% this week",
+        "completed_challenges": [
+            "Reduce energy by 10% this week"
+        ],
+        "history": [
+            {
+                "challenge": "Reduce energy by 10% this week",
+                "points": 50,
+                "completed_at": "2025-04-18T16:31:01.327226"
+            }
+        ]
+    },
+    "ghjg": {
+        "username": "ghjg",
+        "points": 0,
+        "energy_usage": 500,
+        "last_challenge_completed": null,
+        "completed_challenges": [],
+        "history": []
+    },
+    "jhj": {
+        "username": "jhj",
+        "points": 50,
+        "energy_usage": 500,
+        "last_challenge_completed": "Reduce energy by 10% this week",
+        "completed_challenges": [
+            "Reduce energy by 10% this week"
+        ],
+        "history": [
+            {
+                "challenge": "Reduce energy by 10% this week",
+                "points": 50,
+                "completed_at": "2025-04-18T16:39:27.599947"
+            }
+        ]
+    },
+    "nirjala": {
+        "username": "nirjala",
+        "points": 70,
+        "energy_usage": 500,
+        "last_challenge_completed": "Install a smart thermostat",
+        "completed_challenges": [
+            "Install a smart thermostat"
+        ],
+        "history": [
+            {
+                "challenge": "Install a smart thermostat",
+                "points": 70,
+                "completed_at": "2025-04-19T13:58:52.962274"
+            }
+        ]
+    },
+    "dscs": {
+        "username": "dscs",
+        "points": 0,
+        "energy_usage": 500,
+        "last_challenge_completed": null,
+        "completed_challenges": [],
+        "history": []
+    },
+    "scszcsdcs": {
+        "username": "scszcsdcs",
+        "points": 0,
+        "energy_usage": 500,
+        "last_challenge_completed": null,
+        "completed_challenges": [],
+        "history": []
+    }
+}
