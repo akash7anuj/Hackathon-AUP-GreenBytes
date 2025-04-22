@@ -33,6 +33,7 @@ import m_abnormal_energy_usaage_device as abnormal
 from b_next_hour_prediction import return_feats as next_hour_feats
 from c_next_day_prediction import return_feats as next_day_feats
 from d_schedule_week         import generate_weekly_schedule
+from c_next_day_prediction import predict_for_date
 
 st.set_page_config(page_title="Energy Dashboard", layout="wide")
 
@@ -700,77 +701,125 @@ elif section == "abnormal energy usage Appliance":
 elif section == "Forecast Graph":
     st.header("🔮 Consumption Forecasts")
 
-    # --- Next‑Hour Bar Chart ---
-    st.subheader("Next Hour per Device")
+    # --- 1) Next‑Hour Bar Chart ---
+    st.subheader("Next Hour Forecast per Device")
+    # a) find the timestamp for one hour after your latest data
     last_ts = pd.to_datetime(return_dataset()['timestamp'].max())
-    nh_df = next_hour_feats(last_ts + pd.Timedelta(hours=1))
-    bar_fig = px.bar(
+    target_hour = last_ts + pd.Timedelta(hours=1)
+    # b) get per‑device predictions
+    nh_df = next_hour_feats(target_hour)
+    # c) plot
+    fig1 = px.bar(
         nh_df,
         x='appliance',
         y='predicted_power_kwh',
-        labels={'predicted_power_kwh':'kWh','appliance':'Device'},
-        title="Predicted kWh by Appliance for Next Hour"
+        labels={'appliance':'Appliance','predicted_power_kwh':'kWh'},
+        title=f"Predicted kWh by Appliance for {target_hour}"
     )
-    st.plotly_chart(bar_fig, use_container_width=True)
+    st.plotly_chart(fig1, use_container_width=True)
 
     st.markdown("---")
 
-    # --- Next‑Day Line Chart ---
-    st.subheader("Next Day Hourly Profile")
-    today_max = pd.to_datetime(return_dataset()['timestamp'].max())
-    nd_df = next_day_feats(today_max + pd.Timedelta(days=1))
-    # sum across devices per hour
-    nd_hourly = (
-        nd_df
-        .groupby(nd_df['timestamp'].dt.hour)['predicted_power_kwh']
-        .sum()
-        .reset_index(name='pred_kwh')
-    )
-    # if you like, fetch today's actual last‐24h by hour
-    hist = (
-        return_dataset()
-        .assign(timestamp=lambda df: pd.to_datetime(df['timestamp']))
-        .loc[lambda df: df['timestamp'] >= today_max - pd.Timedelta(hours=23)]
-        .assign(hour=lambda df: df['timestamp'].dt.hour)
-        .groupby('hour')['power_kwh']
-        .sum()
-        .reset_index(name='actual_kwh')
-    )
 
-    df2 = pd.merge(nd_hourly, hist, on='hour', how='left').fillna(0)
-    line_fig = px.line(
-        df2,
-        x='hour',
-        y=['actual_kwh','pred_kwh'],
-        labels={'value':'kWh','hour':'Hour of Day','variable':'Legend'},
-        title="Actual vs Predicted Hourly kWh for Next Day"
-    )
-    st.plotly_chart(line_fig, use_container_width=True)
+    st.subheader("📊 Next Day Forecast per Device")
 
-    st.markdown("---")
-
-    # --- 7‑Day Outlook Area Chart ---
-    st.subheader("7‑Day Total Consumption Outlook")
-    # Use your weekly schedule outputs as proxy daily totals
-    custom_start = pd.to_datetime(return_daily_dataset()['timestamp'].max()) + pd.Timedelta(days=1)
-    wk_df = generate_weekly_schedule(custom_start)
-    # assume schedule_df has a 'Pred' column for each day; if not, sum predicted values
-    daily_totals = (
-        wk_df
-        .groupby('date')['predicted_power_kwh']
-        .sum()
-        .reset_index()
+    # 1) Let user pick a date
+    date_str = st.text_input(
+        "Enter a date to forecast (YYYY-MM-DD):",
+        value=str(pd.to_datetime("today").date() + pd.Timedelta(days=1))
     )
-    area_fig = px.area(
-        daily_totals,
+    try:
+        # 2) Get per‑device predictions
+        df_pred = predict_for_date(date_str)
+        # 3) Sum per appliance
+        chart_df = (
+            df_pred
+            .groupby('appliance')['predicted_power_kwh']
+            .sum()
+            .reset_index()
+        )
+
+        # 4) Plotly bar chart
+        fig = px.bar(
+            chart_df,
+            x='appliance',
+            y='predicted_power_kwh',
+            labels={'appliance':'Appliance', 'predicted_power_kwh':'kWh'},
+            title=f"Predicted kWh by Appliance on {date_str}"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    except Exception:
+        st.error("Could not parse the date or run the forecast. Please use YYYY‑MM‑DD.")
+
+    # --- 3) 7‑Day Total Consumption Forecast ---
+    st.subheader("📆 7‑Day Total Consumption Forecast")
+
+    # a) Find last historical date
+    last_day = pd.to_datetime(return_daily_dataset()['timestamp'].max()).normalize()
+
+    # b) Build next‑7‑day totals via your daily predictor
+    future_dates = [last_day + pd.Timedelta(days=i) for i in range(1, 8)]
+    records = []
+    for d in future_dates:
+        df7 = next_day_feats(d)                          # EDIT: use daily predictor
+        total_kwh = df7['predicted_power_kwh'].sum()     # sum across all devices
+        records.append({'date': d.date(), 'total_kwh': total_kwh})
+
+    weekly_df = pd.DataFrame(records)
+
+    # c) Plot a bar chart
+    fig_wk = px.bar(
+        weekly_df,
         x='date',
-        y='predicted_power_kwh',
-        labels={'predicted_power_kwh':'kWh','date':'Date'},
-        title="Predicted Total kWh over Next 7 Days"
+        y='total_kwh',
+        labels={'date':'Date','total_kwh':'Predicted kWh'},
+        title="Predicted Total Consumption Over the Next 7 Days"
     )
-    st.plotly_chart(area_fig, use_container_width=True)
+    st.plotly_chart(fig_wk, use_container_width=True)
 
+    st.markdown("---")
 
+    st.subheader("📅 Next 7‑Day Forecast per Device")
 
+    try:
+        # EDIT: determine reference date
+        last_ts = pd.to_datetime(return_dataset()['timestamp'].max())
+        future_dates = [last_ts + pd.Timedelta(days=i) for i in range(1, 8)]
+
+        # EDIT: collect per‑device predictions for each day
+        records = []
+        for d in future_dates:
+            df_day = next_day_feats(d)
+            # each row has device_id, appliance, predicted_power_kwh
+            for _, row in df_day.iterrows():
+                records.append({
+                    'device_id': row['device_id'],
+                    'appliance': row['appliance'],
+                    'pred_kwh':  row['predicted_power_kwh']
+                })
+
+        wk_df = pd.DataFrame(records)
+
+        # EDIT: aggregate over the 7 days per appliance
+        agg = (
+            wk_df
+            .groupby('appliance')['pred_kwh']
+            .sum()
+            .reset_index()
+        )
+
+        # EDIT: bar chart of total kWh over next week per appliance
+        fig3 = px.bar(
+            agg,
+            x='appliance',
+            y='pred_kwh',
+            labels={'appliance':'Appliance','pred_kwh':'Total kWh'},
+            title="Next 7‑Day Total Predicted Consumption per Appliance"
+        )
+        st.plotly_chart(fig3, use_container_width=True)
+
+    except Exception as e:
+        st.error(f"Error generating 7‑day forecast: {e}")
 
 # streamlit run "C:\Users\Akash\Desktop\electricity3\feature\app.py"
